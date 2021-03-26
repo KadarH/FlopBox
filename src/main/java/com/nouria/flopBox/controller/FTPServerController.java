@@ -70,5 +70,4 @@ public class FTPServerController {
         return this.ftpClientService.listFiles(ftpServer);
     }
 
-
 }

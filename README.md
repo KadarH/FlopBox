@@ -1,7 +1,13 @@
-# FlopBox
+
+<div align="center">
+  
+<h2>J-FlopBox</h2>
 
 ![GitHub](https://img.shields.io/github/license/KadarH/FlopBox)
 ![](https://img.shields.io/badge/version-1.0-green)
+
+
+</div>
 
 Ftp Client REST Api based Spring boot that allows to save the list of your preferred FTP Servers on a temporary H2 database, open connections to them, save and remove files from a distant ftp server.
 
