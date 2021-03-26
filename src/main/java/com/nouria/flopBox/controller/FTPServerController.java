@@ -53,7 +53,7 @@ public class FTPServerController {
     public String connectFtpConnexion(@PathVariable Long idServer) throws IOException {
         FtpServer ftpServer = ftpServerService.get(idServer);
         if(this.ftpClientService.connect(ftpServer))
-            return "connexion opened";
+            return "connection établie !";
         else return "user or password incorrect";
     }
 
@@ -61,7 +61,7 @@ public class FTPServerController {
     public String closeFtpServer(@PathVariable Long id) throws IOException {
         FtpServer ftpServer = ftpServerService.get(id);
         this.ftpClientService.close(ftpServer);
-        return "Connexion fermé!";
+        return "Connexion fermée !";
     }
 
     @GetMapping("/servers/{id}/files")
