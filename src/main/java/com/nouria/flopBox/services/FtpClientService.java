@@ -8,7 +8,12 @@ import java.util.List;
 
 public interface FtpClientService {
 
-    boolean connect(FtpServer ftpServer) throws IOException ;
-    void close(FtpServer ftpServer) throws IOException;
-    List<FTPFile> listFiles(FtpServer ftpServer)throws IOException;
+    boolean connect(FtpServer ftpServer) throws IOException;
+    boolean isConnected(Long id);
+    List<String> listFiles(FtpServer ftpServer,String directoryPath)throws IOException;
+    List<FTPFile> listDirectories(FtpServer ftpServer,String path)throws IOException;
+    List<String> listAllFromDirectory(FtpServer ftpServer,String path)throws IOException;
+    List<FTPFile> addNewDirectory(FtpServer ftpServer,String path) throws IOException;
+    boolean removeDirectory(FtpServer ftpServer,String path) throws IOException;
+
 }

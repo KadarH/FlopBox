@@ -1,15 +1,14 @@
 package com.nouria.flopBox.services.impl;
 
+import com.nouria.flopBox.exceptions.FtpServerNotFoundException;
 import com.nouria.flopBox.models.FtpServer;
 import com.nouria.flopBox.repo.FtpServerRepository;
 import com.nouria.flopBox.services.FtpServerService;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
-@Transactional
 public class FtpServerServiceImpl implements FtpServerService {
 
     private FtpServerRepository ftpServerRepository;
@@ -25,7 +24,7 @@ public class FtpServerServiceImpl implements FtpServerService {
 
     @Override
     public FtpServer get(Long id) {
-        return ftpServerRepository.findById(id).get();
+        return ftpServerRepository.findById(id).orElseThrow(() -> new FtpServerNotFoundException(id));
     }
 
     @Override
@@ -36,7 +35,7 @@ public class FtpServerServiceImpl implements FtpServerService {
     @Override
     public FtpServer update(FtpServer ftpServer) {
 
-        FtpServer ftpServerOld = ftpServerRepository.findById(ftpServer.getId()).get();
+        FtpServer ftpServerOld = ftpServerRepository.findById(ftpServer.getId()).orElseThrow(() -> new FtpServerNotFoundException(ftpServer.getId()));
 
         if(!ftpServer.getServer().equals(ftpServerOld.getServer()))
             ftpServerOld.setServer(ftpServer.getServer());
@@ -52,6 +51,6 @@ public class FtpServerServiceImpl implements FtpServerService {
 
     @Override
     public void delete(Long id) {
-        ftpServerRepository.delete(ftpServerRepository.findById(id).get());
+        ftpServerRepository.delete(ftpServerRepository.findById(id).orElseThrow(() -> new FtpServerNotFoundException(id)));
     }
 }

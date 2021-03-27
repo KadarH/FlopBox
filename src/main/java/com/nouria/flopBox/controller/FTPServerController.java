@@ -22,21 +22,23 @@ public class FTPServerController {
         this.ftpClientService = ftpClientService;
     }
 
+    // ------------------------------------------------------------------
+    // --------------   Gestion de mes serveur FTP sur le FlopBOX    ----
+    // ------------------------------------------------------------------
+
+    @PostMapping("/servers")
+    public FtpServer addNewFtpServer(@RequestBody FtpServer ftpServer) {
+
+        return this.ftpServerService.add(ftpServer);
+    }
+
     @GetMapping("/servers")
     public List<FtpServer> listFtpServers() {
         return this.ftpServerService.list();
     }
 
-    @PostMapping("/servers")
-    public FtpServer addNewFtpServer(@RequestBody FtpServer ftpServer) {
-
-        this.ftpServerService.add(ftpServer);
-        return this.ftpServerService.add(ftpServer);
-    }
-
     @PutMapping("/servers/{id}")
     public FtpServer updateFtpServer(@RequestBody FtpServer ftpServer, @PathVariable Long id) {
-
         ftpServer.setId(id);
         this.ftpServerService.update(ftpServer);
         return this.ftpServerService.add(ftpServer);
@@ -49,25 +51,56 @@ public class FTPServerController {
         return "Serveur FTP supprimé avec succès !";
     }
 
+    // ------------------------------------------------------------------
+    // --------------   Etablir une connexion FTP à un serveur donné
+    // ------------------------------------------------------------------
+
     @GetMapping("/servers/{idServer}/connect")
     public String connectFtpConnexion(@PathVariable Long idServer) throws IOException {
         FtpServer ftpServer = ftpServerService.get(idServer);
         if(this.ftpClientService.connect(ftpServer))
             return "connection établie !";
-        else return "user or password incorrect";
+        else return "Probleme de connexion : user or password incorrect";
     }
 
-    @GetMapping("/servers/{id}/close")
-    public String closeFtpServer(@PathVariable Long id) throws IOException {
-        FtpServer ftpServer = ftpServerService.get(id);
-        this.ftpClientService.close(ftpServer);
-        return "Connexion fermée !";
-    }
+    // ------------------------------------------------------------------
+    // --------------   liste des fichiers sur le path /
+    // ------------------------------------------------------------------
 
     @GetMapping("/servers/{id}/files")
-    public List<FTPFile> listFilesFtpServer(@PathVariable Long id) throws IOException {
+    public List<String> listFilesFtpServer(@PathVariable Long id) throws IOException {
         FtpServer ftpServer = ftpServerService.get(id);
-        return this.ftpClientService.listFiles(ftpServer);
+        return this.ftpClientService.listFiles(ftpServer, "/");
+    }
+
+    // ------------------------------------------------------------------
+    // ------   nom de tous les fichiers et dossiers sur un path donné
+    // ------------------------------------------------------------------
+
+    @GetMapping("/servers/{id}/content")
+    public List<String> listFilesFtpServer(@PathVariable Long id, @RequestBody String path) throws IOException {
+        FtpServer ftpServer = ftpServerService.get(id);
+        return this.ftpClientService.listAllFromDirectory(ftpServer, path);
+    }
+
+    // ------------------------------------------------------------------
+    // ------   nom de tous les dossiers sur un path donné
+    // ------------------------------------------------------------------
+
+    @GetMapping("/servers/{id}/directories")
+    public List<FTPFile> listDirectoriesFtpServer(@PathVariable Long id, @RequestBody String path) throws IOException {
+        FtpServer ftpServer = ftpServerService.get(id);
+        return this.ftpClientService.listDirectories(ftpServer, path);
+    }
+
+    // ------------------------------------------------------------------
+    // ------   ajouter un nouveau dossier sur un path donné
+    // ------------------------------------------------------------------
+
+    @GetMapping("/servers/{id}/directories/new")
+    public List<FTPFile> addNewDirectoryToFtpServer(@PathVariable Long id, @RequestBody String path) throws IOException {
+        FtpServer ftpServer = ftpServerService.get(id);
+        return this.ftpClientService.addNewDirectory(ftpServer, path);
     }
 
 }
