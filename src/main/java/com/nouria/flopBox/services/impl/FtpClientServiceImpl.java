@@ -44,7 +44,27 @@ public class FtpClientServiceImpl implements FtpClientService {
             } else throw new RuntimeException("Problème de la connexion au serveur ftp, user ou mot de passe incorrect");
     }
 
-    @Scheduled(fixedDelay = 200000)
+    @Override
+    public boolean enterPassiveMode(FtpServer ftpServer) throws IOException {
+        FTPClient ftp = this.connexions.get(ftpServer.getId()).getFtpClient();
+        if (ftp.isConnected()) {
+            ftp.enterLocalPassiveMode();
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean enterActiveMode(FtpServer ftpServer) throws IOException {
+        FTPClient ftp = this.connexions.get(ftpServer.getId()).getFtpClient();
+        if (ftp.isConnected()) {
+            ftp.enterLocalActiveMode();
+            return true;
+        }
+        return false;
+    }
+
+    @Scheduled(fixedDelay = 2000000)
     private void closeConnexions(){
         for (Map.Entry<Long,FtpConnection> entry : this.connexions.entrySet())
             if(entry.getValue().getDateOfLastConnection().plusMinutes(30).isAfter(LocalDateTime.now()))
@@ -59,21 +79,30 @@ public class FtpClientServiceImpl implements FtpClientService {
     @Override
     public List<String> listFiles(FtpServer ftpServer,String directoryPath) throws IOException {
         FTPClient ftp = this.connexions.get(ftpServer.getId()).getFtpClient();
-        if (ftp.isConnected()) return Arrays.stream(ftp.listFiles(directoryPath)).map(FTPFile::getName).collect(Collectors.toList());
+        if (ftp.isConnected()) {
+            return Arrays.stream(ftp.listFiles(directoryPath)).map(FTPFile::getName).collect(Collectors.toList());
+        }
         else throw new FtpServerNotConnectedException(ftpServer.getId());
     }
 
     @Override
     public List<FTPFile> listDirectories(FtpServer ftpServer, String path) throws IOException {
+
+        // TODO : check if reply code = 550 => throw new Exception ( i think to create my own FileOrDirectoryNotFoundException exception )
+
         FTPClient ftp = this.connexions.get(ftpServer.getId()).getFtpClient();
-        if (ftp.isConnected()) return Arrays.asList(ftp.listDirectories(path));
+        if (ftp.isConnected()) {
+            return Arrays.asList(ftp.listDirectories(path));
+        }
         else throw new RuntimeException("Merci d'etablir une connexion au serveur ftp");
     }
 
     @Override
     public List<String> listAllFromDirectory(FtpServer ftpServer,String path) throws IOException {
         FTPClient ftp = this.connexions.get(ftpServer.getId()).getFtpClient();
-        if (ftp.isConnected()) return Arrays.asList(ftp.listNames());
+        if (ftp.isConnected()) {
+            return Arrays.asList(ftp.listNames(path));
+        }
         else throw new RuntimeException("Merci d'etablir une connexion au serveur ftp");
     }
 
@@ -82,17 +111,27 @@ public class FtpClientServiceImpl implements FtpClientService {
         FTPClient ftp = this.connexions.get(ftpServer.getId()).getFtpClient();
         if (ftp.isConnected()) {
             ftp.makeDirectory(path);
-            ftp.changeWorkingDirectory(path);
             return Arrays.asList(ftp.listFiles());
         }
         else throw new RuntimeException("Merci d'etablir une connexion au serveur ftp");
     }
 
     @Override
-    public boolean removeDirectory(FtpServer ftpServer,String path) throws IOException {
+    public boolean deleteDirectory(FtpServer ftpServer,String path) throws IOException {
         FTPClient ftp = this.connexions.get(ftpServer.getId()).getFtpClient();
-        if (ftp.isConnected()) return ftp.removeDirectory(path);
+        if (ftp.isConnected()) {
+            return ftp.removeDirectory(path);
+        }
         else throw new RuntimeException("Merci d'etablir une connexion au serveur ftp");
     }
 
+    @Override
+    public boolean renameDirectory(FtpServer ftpServer, String path, String newName) throws IOException {
+        FTPClient ftp = this.connexions.get(ftpServer.getId()).getFtpClient();
+        if (ftp.isConnected()) {
+            return ftp.rename(path, newName);
+        }
+        else throw new RuntimeException("Merci d'etablir une connexion au serveur ftp");
+
+    }
 }

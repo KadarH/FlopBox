@@ -58,6 +58,23 @@ body :
 **Retour attendu** : un objet FtpServer contenant les informations du serveur modifier + id .
 
 
+#### Specifier le port d'un serveur FTP par id
+
+- type de la requête : PUT
+- url de la requête  :  /servers/{id} 
+- content-type : application/json
+
+body :
+```bash
+{
+	"server":"hostnameX",
+	"port":'nouveauPort' de type int,
+	"user":"anonymous",
+	"password":"anonymous"
+}
+```
+**Retour attendu** : un objet FtpServer contenant les informations du serveur modifier + id .
+
 #### Liste des serveurs FTP dans le FlopBOX
 
 - type de la requête : GET
@@ -76,6 +93,25 @@ body :
 -**Retour attendu** : on doit avoir une phrase de confirmation de connexion au serveur : Connexion établie !
 
 
+#### Entrer en mode Passive pour un serveur ftp 
+
+- type de la requête : GET
+- url de la requête  :  /servers/{id}/passive
+- content-type : application/json
+
+-**Retour attendu** : on doit avoir une phrase de confirmation de mode passif au serveur : In Passive mode !
+
+
+
+#### Entrer en mode Active pour un serveur ftp 
+
+- type de la requête : GET
+- url de la requête  :  /servers/{id}/passive
+- content-type : application/json
+
+-**Retour attendu** : on doit avoir une phrase de confirmation de mode active au serveur : In Active mode !
+
+
 #### Se déconnecter d'un serveur ftp par son id
 
 - type de la requête : GET
@@ -85,3 +121,59 @@ body :
 -**Retour attendu** : on doit avoir une phrase de confirmation de connexion au serveur : Connexion fermée !
 
 
+#### Afficher la liste des fichier sur le / d'un serveur ftp par son id
+
+- type de la requête : GET
+- url de la requête  :  /servers/{id}/files
+- content-type : application/json
+
+-**Retour attendu** : liste des noms des fichiers
+
+#### Afficher la liste des dossier d'un repertoire donnée d'un serveur ftp par son id
+
+- type de la requête : GET
+- url de la requête  :  /servers/{id}/directories
+- content-type : application/json
+- @RequestParam : {pathRep}
+
+-**Retour attendu** : liste des dossier dans le path pathRep
+
+#### ajouer un dossier à un repertoire donnée d'un serveur ftp par son id
+
+- type de la requête : GET
+- url de la requête  :  /servers/{id}/directories/new
+- content-type : application/json
+- @RequestParam : {pathRep/nomRep}
+
+-**Retour attendu** : liste des dossier dans le path pathRep
+
+
+#### supprimer un dossier d'un repertoire donné d'un serveur ftp par son id
+
+- type de la requête : GET
+- url de la requête  :  /servers/{id}/directories/delete
+- content-type : application/json
+- @RequestParam : {pathRep/nomRep}
+
+-**Retour attendu** : une phrase de confirmation de suppression du dossier
+
+
+#### renommer un dossier d'un repertoire donné d'un serveur ftp par son id
+
+- type de la requête : GET
+- url de la requête  :  /servers/{id}/directories/rename
+- content-type : application/json
+- @RequestParam : {pathRep/nomRep} {pathRep/newName}
+
+-**Retour attendu** : une phrase de confirmation de suppression du dossier
+
+---
+
+L'application respecte les exigences suivantes : 
+
+- Le code source de l'application s'execute avec maven  ( mvn clean install )
+- Le code suit les principes de la programation orientée objet. 
+- Le code est documenté et testé via curl et postman
+- Le code compile correctement via maven.
+- La plateforme supporte les connexions de plusieurs clients simultanées.
+- La plateform supporte les mode Actif / Passif
