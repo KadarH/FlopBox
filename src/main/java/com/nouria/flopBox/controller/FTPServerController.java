@@ -102,7 +102,7 @@ public class FTPServerController {
     }
 
     // ------------------------------------------------------------------
-    // ------   nom de tous les fichiers et dossiers sur un path donné
+    // ------   noms des fichiers et dossiers sur un path donné
     // ------------------------------------------------------------------
 
     @GetMapping("/servers/{id}/content")
@@ -151,6 +151,62 @@ public class FTPServerController {
         FtpServer ftpServer = ftpServerService.get(id);
         if(this.ftpClientService.renameDirectory(ftpServer, path, newName)) return "Dossier renommé avec succés.";
         else return "Probleme lors du renommage du document, verifier les droits d'acces au repertoire " + path;
+    }
+
+
+    @GetMapping("/servers/{id}/download/binary")
+    public String DownloadBinaryFileFtpServer(@PathVariable Long id, @RequestParam String input, @RequestParam String output) throws IOException {
+        FtpServer ftpServer = ftpServerService.get(id);
+        if(this.ftpClientService.downloadBinary(ftpServer, input, output)){
+            return "Fichier binaire télechargé avec succès";
+        }
+        return "problème lors du télechargement du fichier binaire"+ input;
+    }
+
+
+    @GetMapping("/servers/{id}/download/txt")
+    public String DownloadTxtFileFtpServer(@PathVariable Long id, @RequestParam String input, @RequestParam String output) throws IOException {
+        FtpServer ftpServer = ftpServerService.get(id);
+        if(this.ftpClientService.downloadText(ftpServer, input, output)){
+            return "Fichier texte télechargé avec succès";
+        }
+        return "problème lors du télechargement du fichier "+ input;
+    }
+
+    @GetMapping("/servers/{id}/download/all")
+    public String DownloadAllFilesFtpServer(@PathVariable Long id, @RequestParam String parentDir, @RequestParam String currentDir, @RequestParam String saveDir) throws IOException {
+        FtpServer ftpServer = ftpServerService.get(id);
+        if(this.ftpClientService.downloadAll(ftpServer,parentDir,currentDir,saveDir)){
+            return "Contenu du dossier "+ parentDir + "" + currentDir +" télechargé avec succès";
+        }
+        return "problème lors du télechargement du contenu du dossier "+ parentDir + "/" + currentDir;
+    }
+
+    @GetMapping("/servers/{id}/store/file")
+    public String StoreOneFileFtpServer(@PathVariable Long id, @RequestParam String localFilePath, @RequestParam String remoteFilePath) throws IOException {
+        FtpServer ftpServer = ftpServerService.get(id);
+        if(this.ftpClientService.storeFile(ftpServer,localFilePath,remoteFilePath)){
+            return "Le fichier "+ localFilePath +" est enregistré sur le serveur FTP avec succès";
+        }
+        return "problème lors de l'enregistrement du fichier"+ localFilePath;
+    }
+
+    @GetMapping("/servers/{id}/store/directory")
+    public String StoreOneDirectoryFtpServer(@PathVariable Long id, @RequestParam String parentDir, @RequestParam String currentDir, @RequestParam String saveDir) throws IOException {
+        FtpServer ftpServer = ftpServerService.get(id);
+        if(this.ftpClientService.uploadDirectory(ftpServer,parentDir,currentDir, saveDir)){
+            return "Le dossier "+ parentDir + "" + currentDir +" est enregistré sur le serveur FTP avec succès";
+        }
+        return "problème lors de l'enregistrement du dossier"+ parentDir;
+    }
+
+    @GetMapping("/servers/{id}/store/all")
+    public String StoreAllFilesFtpServer(@PathVariable Long id, @RequestParam String parentDir, @RequestParam String currentDir, @RequestParam String saveDir) throws IOException {
+        FtpServer ftpServer = ftpServerService.get(id);
+        if(this.ftpClientService.storeDirectoryContent(ftpServer,parentDir,currentDir,saveDir)){
+            return "Contenu du dossier "+ parentDir + "" + currentDir +" enregistré sur le serveur FTP avec succès";
+        }
+        return "problème lors du télechargement du contenu du dossier "+ parentDir + "/" + currentDir;
     }
 
 }

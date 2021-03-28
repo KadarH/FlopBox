@@ -188,6 +188,70 @@ body :
 
 -**Retour attendu** : une phrase de confirmation de suppression du dossier
 
+
+#### Telecharger un fichier binaire depuis le serveur ftp
+
+- type de la requête : GET
+- url de la requête  :  /servers/{id}/download/binary
+- content-type : application/json
+- @RequestParam : {path}
+
+-**Retour attendu** : une phrase de confirmation de téléchargement du fichier
+
+
+#### Telecharger un fichier texte depuis le serveur ftp
+
+- type de la requête : GET
+- url de la requête  :  /servers/{id}/download/txt
+- content-type : application/json
+- @RequestParam : {path}
+
+-**Retour attendu** : une phrase de confirmation de téléchargement du fichier
+
+
+#### Telecharger tout le contenu d'un dossier depuis le serveur ftp
+
+- type de la requête : GET
+- url de la requête  :  /servers/{id}/download/all
+- content-type : application/json
+- @RequestParam String parentDir
+- @RequestParam String currentDir
+- @RequestParam String saveDir
+
+#### Enregistrer un dossier dans le serveur ftp
+
+- type de la requête : GET
+- url de la requête  :  /servers/{id}/store/directory
+- content-type : application/json
+- @RequestParam String parentDir
+- @RequestParam String currentDir
+- @RequestParam String saveDir
+
+
+-**Retour attendu** : une phrase de confirmation de l'enregistrement du dossier
+
+
+#### Enregistrer un fichier dans le serveur ftp
+
+- type de la requête : GET
+- url de la requête  :  /servers/{id}/store/file
+- content-type : application/json
+- @RequestParam String localFilePath
+- @RequestParam String remoteFilePath
+
+-**Retour attendu** : une phrase de confirmation de l'enregistrement du fichier
+
+
+#### Enregistrer tout le contenu d'un dossier dans le serveur ftp
+
+- type de la requête : GET
+- url de la requête  :  /servers/{id}/store/all
+- content-type : application/json
+- @RequestParam String localFilePath
+- @RequestParam String remoteFilePath
+
+-**Retour attendu** : une phrase de confirmation de l'enregistrement du fichier
+
 ---
 
 L'application respecte les exigences suivantes : 
@@ -198,3 +262,123 @@ L'application respecte les exigences suivantes :
 - Le code compile correctement via maven.
 - La plateforme supporte les connexions de plusieurs clients simultanées.
 - La plateform supporte les mode Actif / Passif
+
+---
+
+### Instructions à suivre : 
+
+1 - Lancer l'application FlopBox 
+
+```bash
+git clone https://github.com/KadarH/FlopBox
+mvn clean install
+./mvnw spring-boot:run
+```
+
+2 - Lister les serveurs FTP existants ( normalement la liste est vide au debut ):
+
+```bash
+curl http://localhost:8080/servers
+```
+
+3- Ajouter un nouveau serveur:
+
+```bash
+curl -X POST -d '{"server":"localhost", "port":2121, "user":"anonymous", "password":"anonymous"}' -H 'Content-Type: application/json'  http://localhost:8080/servers
+```
+
+4- Ajouter un deuxième serveur:
+
+```bash
+curl -X POST -d '{"server":"speedtest.tele2.net", "port":22, "user":"anonymous", "password":"anonymous"}' -H 'Content-Type: application/json'  http://localhost:8080/servers
+```
+
+5- Modifier un serveur ( par exemple : modifier le port  du serveur 2):
+
+```bash
+curl -X PUT -d  '{"server":"speedtest.tele2.net", "port":21, "user":"anonymous", "password":"anonymous"}' -H 'Content-Type: application/json' http://localhost:8080/servers/2
+```
+
+6- Supprimer un serveur:
+
+```bash
+curl -X DELETE http://localhost:8080/servers/2
+```
+
+7- Se Connecter à un serveur FTP  ( id =1 )
+
+```bash
+curl -H "Content-Type:application/json" -X GET  ‘http://localhost:8080/servers/1/connect'
+```
+
+8- Passer en mode Active:
+
+```bash
+curl -H "Content-Type:application/json" -X GET  ‘http://localhost:8080/servers/1/active'
+```
+
+9- Passer en mode passive:
+
+```bash
+curl -H "Content-Type:application/json" -X GET  ‘http://localhost:8080/servers/1/passive'
+```
+
+10- Liste des fichier dans le / du serveur: 
+
+```bash
+curl -H "Content-Type:application/json" -X GET  ‘http://localhost:8080/servers/1/files'
+```
+
+11- Liste des fichiers dans le un dossier donné ( exemple : dossier avec le nom test): 
+
+```bash
+curl -H "Content-Type:application/json" -X GET  ‘http://localhost:8080/servers/1/content?path=/test'
+```
+
+12- Liste des dossiers dans le un dossier donné ( exemple : dossier avec le nom test): 
+
+```bash
+curl -H "Content-Type:application/json" -X GET  ‘http://localhost:8080/servers/1/directories?path=/test'
+```
+
+13- Telecharger un fichier binaire depuis le serveur FTP:
+
+```bash
+curl -H "Content-Type:application/json" -X GET  ‘http://localhost:8080/servers/1/download/binary?input=path-fichier&output=/Users/mac/Documents/path-fichier’
+```
+
+14- Telecharger un fichier texte depuis le serveur FTP:
+
+```bash
+curl -H "Content-Type:application/json" -X GET  ‘http://localhost:8080/servers/1/download/txt?input=path-fichier&output=/Users/mac/Documents/path-fichier’
+```
+
+15- Telecharger tout un dossier depuis un serveur FTP:
+
+```bash
+curl -H "Content-Type:application/json" -X GET  ‘http://localhost:8080/servers/1/download/all?parentDir=/test/&currentDir=&saveDir=/Users/Nouria/Documents/’
+```
+
+16- Enregistrer un fichier sur un serveur FTP:
+
+```bash
+curl -H "Content-Type:application/json" -X GET  ‘http://localhost:8080/servers/1/store/file?localFilePath=/Users/Nouria/Documents/logoM.png&remoteFilePath=/test/logoM.png’
+```
+
+17- Enregistrer un dossier sur un serveur FTP:
+
+```bash
+curl -H "Content-Type:application/json" -X GET  ‘http://localhost:8080/servers/1/store/all?parentDir=/test/&currentDir=&saveDir=/Users/Nouria/Documents/’
+```
+
+18- Enregistrer tout le contenu d'un dossier depuis un serveur FTP:
+
+```bash
+curl -H "Content-Type:application/json" -X GET  ‘http://localhost:8080/servers/1/store/all?parentDir=/test/&currentDir=&saveDir=/Users/Nouria/Documents/’
+```
+
+19- Fermé la connexion d'un serveur FTP ( Normalement j'ai développé une fonction Batch qui permet la fermeture de la connexion dans 30 min si l'utilisateur n'a pas effectué une opération)
+
+```bash
+curl -H "Content-Type:application/json" -X GET  ‘http://localhost:8080/servers/1/close
+```
