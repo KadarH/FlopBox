@@ -308,77 +308,77 @@ curl -X DELETE http://localhost:8080/servers/2
 7- Se Connecter à un serveur FTP  ( id =1 )
 
 ```bash
-curl -H "Content-Type:application/json" -X GET  ‘http://localhost:8080/servers/1/connect'
+curl -H "Content-Type:application/json" -X GET  'http://localhost:8080/servers/1/connect'
 ```
 
 8- Passer en mode Active:
 
 ```bash
-curl -H "Content-Type:application/json" -X GET  ‘http://localhost:8080/servers/1/active'
+curl -H "Content-Type:application/json" -X GET  'http://localhost:8080/servers/1/active'
 ```
 
 9- Passer en mode passive:
 
 ```bash
-curl -H "Content-Type:application/json" -X GET  ‘http://localhost:8080/servers/1/passive'
+curl -H "Content-Type:application/json" -X GET  'http://localhost:8080/servers/1/passive'
 ```
 
 10- Liste des fichier dans le / du serveur: 
 
 ```bash
-curl -H "Content-Type:application/json" -X GET  ‘http://localhost:8080/servers/1/files'
+curl -H "Content-Type:application/json" -X GET  'http://localhost:8080/servers/1/files'
 ```
 
 11- Liste des fichiers dans le un dossier donné ( exemple : dossier avec le nom test): 
 
 ```bash
-curl -H "Content-Type:application/json" -X GET  ‘http://localhost:8080/servers/1/content?path=/test'
+curl -H "Content-Type:application/json" -X GET  'http://localhost:8080/servers/1/content?path=/test'
 ```
 
 12- Liste des dossiers dans le un dossier donné ( exemple : dossier avec le nom test): 
 
 ```bash
-curl -H "Content-Type:application/json" -X GET  ‘http://localhost:8080/servers/1/directories?path=/test'
+curl -H "Content-Type:application/json" -X GET  'http://localhost:8080/servers/1/directories?path=/test'
 ```
 
 13- Telecharger un fichier binaire depuis le serveur FTP:
 
 ```bash
-curl -H "Content-Type:application/json" -X GET  ‘http://localhost:8080/servers/1/download/binary?input=path-fichier&output=/Users/mac/Documents/path-fichier’
+curl -H "Content-Type:application/json" -X GET  'http://localhost:8080/servers/1/download/binary?input=path-fichier&output=/Users/mac/Documents/path-fichier’
 ```
 
 14- Telecharger un fichier texte depuis le serveur FTP:
 
 ```bash
-curl -H "Content-Type:application/json" -X GET  ‘http://localhost:8080/servers/1/download/txt?input=path-fichier&output=/Users/mac/Documents/path-fichier’
+curl -H "Content-Type:application/json" -X GET  'http://localhost:8080/servers/1/download/txt?input=path-fichier&output=/Users/mac/Documents/path-fichier’
 ```
 
 15- Telecharger tout un dossier depuis un serveur FTP:
 
 ```bash
-curl -H "Content-Type:application/json" -X GET  ‘http://localhost:8080/servers/1/download/all?parentDir=/test/&currentDir=&saveDir=/Users/Nouria/Documents/’
+curl -H "Content-Type:application/json" -X GET  'http://localhost:8080/servers/1/download/all?parentDir=/test/&currentDir=&saveDir=/Users/Nouria/Documents/’
 ```
 
 16- Enregistrer un fichier sur un serveur FTP:
 
 ```bash
-curl -H "Content-Type:application/json" -X GET  ‘http://localhost:8080/servers/1/store/file?localFilePath=/Users/Nouria/Documents/logoM.png&remoteFilePath=/test/logoM.png’
+curl -H "Content-Type:application/json" -X GET  'http://localhost:8080/servers/1/store/file?localFilePath=/Users/Nouria/Documents/logoM.png&remoteFilePath=/test/logoM.png’
 ```
 
 17- Enregistrer un dossier sur un serveur FTP:
 
 ```bash
-curl -H "Content-Type:application/json" -X GET  ‘http://localhost:8080/servers/1/store/all?parentDir=/test/&currentDir=&saveDir=/Users/Nouria/Documents/’
+curl -H "Content-Type:application/json" -X GET  'http://localhost:8080/servers/1/store/all?parentDir=/test/&currentDir=&saveDir=/Users/Nouria/Documents/’
 ```
 
 18- Enregistrer tout le contenu d'un dossier depuis un serveur FTP:
 
 ```bash
-curl -H "Content-Type:application/json" -X GET  ‘http://localhost:8080/servers/1/store/all?parentDir=/test/&currentDir=&saveDir=/Users/Nouria/Documents/’
+curl -H "Content-Type:application/json" -X GET  'http://localhost:8080/servers/1/store/all?parentDir=/test/&currentDir=&saveDir=/Users/Nouria/Documents/’
 ```
 
 19- Fermé la connexion d'un serveur FTP ( Normalement j'ai développé une fonction Batch qui permet la fermeture de la connexion dans 30 min si l'utilisateur n'a pas effectué une opération)
 
 ```bash
-curl -H "Content-Type:application/json" -X GET  ‘http://localhost:8080/servers/1/close
+curl -H "Content-Type:application/json" -X GET  'http://localhost:8080/servers/1/close
 ```
