@@ -12,6 +12,7 @@
 Ftp Client REST Api based Spring boot that allows to save the list of your preferred FTP Servers on a temporary H2 database, open connections to them, save and remove files from a distant ftp server.
 
 ---
+Les endpoints : 
 
 #### Enregistrer un nouveau serveur FTP
 
