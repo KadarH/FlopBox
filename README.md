@@ -12,6 +12,26 @@
 Ftp Client REST Api based Spring boot that allows to save the list of your preferred FTP Servers on a temporary H2 database, open connections to them, save and remove files from a distant ftp server.
 
 ---
+Pour lancer l'application : 
+
+methode 1 : 
+
+```bash
+mvn clean install 
+./mvnw spring-boot:run
+```
+
+methode 2 : 
+
+
+```bash
+mvn clean install 
+mvn package
+cd target/
+java -jar flopBox-0.0.1-SNAPSHOT.jar
+```
+
+---
 Les endpoints : 
 
 #### Enregistrer un nouveau serveur FTP
